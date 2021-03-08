@@ -1,0 +1,144 @@
+***************************************************************************
+
+BUF SORINA-ANAMARIA 311CA
+README - TEMA1 MN
+
+***************************************************************************
+
+PARTEA 1
+
+	Primul task a constat in rezolvarea unui sistem liniar de forma Ax=b prin
+implementarea metodei iterative Jacobi, particularizata pentru matrici rare
+aduse in forma comprimata.
+	Au trebuit implementate urmatoarele functii:
+
+		•function [A, b] = generate_probabilities_system(rows)
+			-in aceasta functie am avut de creat matricea A in forma sa densa
+			pe baza probabilitatilor de castig ale soricelului din diagrama 
+			labirintului; probabilitatile le-am obtinut pe baza unor cazuri
+			particulare prin mai multe relatii de recurenta evidentiate la
+			nivelul indicilor matricei A, separand relatiile pentru prima si
+			ultima linie, elementele de pe lateralele labirintului, colturile
+			si intersectiile interioare; matricea A este patratica de marime
+			rows(rows+1)/2; vectorul b e de aceeasi lungime si l-am construit
+			observand ca are numai elemente nule, in afara de ultimele rows 
+			elemente care sunt 1;
+
+		•function [values, colind, rowptr] = matrix_to_csr(A)
+			-in aceasta functie am avut de adus matricea A din forma sa densa
+			in comprimata, creeand 3 vectori: values, de lungime nz(nr valori
+			nenule), care contine toate valorile nenule din matrice; colind,
+			de lungime nz, care contine indicii coloanelor asociate elementelor
+			nenule; rowptr, de lungime nr linii matrice A + 1, care contine
+			pointeri la primul element nenul de pe fiecare linie, iar pe ultima
+			pozitie am adaugat numarul nz+1;
+
+		•function [GJ, cJ] = Jacobi_factorization(A, b)
+			-in aceasta functie am calculat matricea si vectorul de iteratie 
+			reprezentative metodei Jacobi cu ajutorul notiunilor prezentate
+			in cadrul laboratorului si cursului aferent;
+
+		•function [x] = Jacobi_sparse(Gvalues, Gcolind, Growptr, c, tol)
+			-in aceasta functie am calculat valoarea vectorului solutie x cu 
+			ajutorul metodei iterative Jacobi; singura diferenta a facut-o
+			prezenta matricei G sub forma CSR, care a necesitat folosirea
+			functiei csr_multiplication deja implementatapentru inmultirea 
+			matricei G cu solutia x de la o anumita iteratie.
+
+	Feedback: probabil a fost atat cel mai usor task din punct de vedere al
+intelegerii textului si al implementarii cat si cel care mi-a iesit cel mai 
+repede, desi stiu ca l-as fi putut face mult mai optimizat; insa, am descoperit 
+vectorizarile abia la taskul 3 si nu m-am mai intors la aceasta parte.
+
+PARTEA 2
+	
+	Al doilea task a constat in proiectarea unui algoritm de clustering, cat si
+calcularea costului unui astfel de algoritm.
+	Au trebuit implementate urmatoarele functii:
+
+		•function [centroids] = clustering_pc(points, NC)
+			-in aceasta functie am segmentat punctele n-dimensionale primite ca
+			parametru in NC clustere, la inceput, pe baza relatiilor initiale,
+			apoi le reorganizam in functie de distanta euclidiana minima catre
+			centroizi, recalculand centrele de masa la fiecare iteratie pana cand
+			acestia nu s-au mai modificat; m-am folosit de o matrice auxiliara
+			in care pastrez suma coordonatelor punctelor pe fiecare dimensiune
+			si nr nou de puncte corespunzator fiecarui nou cluster;
+
+		•function [cost] = compute_cost_pc(points, centroids)
+			-in aceasta functie am avut de calculat costul clusteringului ca fiind
+			suma distantelor euclidiene minime dintre puncte si cel mai apropiat
+			centroid.
+
+	Feedback: a fost o problema care a necesitat putin mai mult timp de gandire
+decat prima, dar care mi-a iesit destul de repede in final si pe care din nou as fi 
+putut sa o fac mult mai optimizata daca imi dadeam seama de asta de la inceput.
+
+PARTEA 3
+
+	Al treila task a constat in rezolvarea unui sistem liniar de forma Ax=b prin
+implementarea metodei ortogonale Householder, cat si reprezentarea unor histograme
+si familiarizarea cu primele concepte ale invatarii automate nesupervizate.
+	Au trebuit implementate urmatoarele functii:
+
+		•function [sol] = rgbHistogram(pathtoimage, countbins)
+			-functia returneaza histograma rgb aferenta imaginii date drept parametru
+			realizata cu ajutorul functiei histc;
+
+		•function [sol] = hsvHistogram(pathtoimage, countbins)
+			-functia returneaza histograma hsv aferenta imaginii date drept parametru
+			realizata cu ajutorul functiei histc, deosebindu-se de rgb prin algoritmul
+			de convertire a valoriilor rgb in hsv;
+
+		•function [Q, R] = Householder(A)
+			-functia returneaza o matrice ortogonala Q si una superior triunghiulara R
+			cu ajutorul factorizarii Householder studiate la laborator si curs;
+
+		•function [x] = SST(A, b)
+			-functia calculeaza solutia x a sistemului superior triunghiukar Ax=b;
+
+		•function [X, y] = preprocess(pathtodataset, histogram, countbins)
+			-functia returneaza o matrice de caracteristici X formata din histogramele
+			corespunzatoare setului de date, la care se adauga o coloana de 1, si un 
+			vector de etichete y care cuprinde tipul fiecarei poze din set;
+
+		•function [w] = learn(X, y)
+			-functia returneaza vectorul de componente w prin factorizarea lui X in Q 
+			si R folosind functia Householder implementata anterior si rezolvarea unui
+			sistem superior triunghiular cu ajutorul functiei SSt, deja implementata;
+
+		•function [percentage] = evaluate(pathtotestset, w, histogram, countbins)
+			-functia returneaza procentul de poze corect identificate dintr-un nou set
+			de date folosind vectorul de componente w creat anterior.
+
+Feedback: este problema care mi-a dat cele mai mari batai de cap, incepand de la intele-
+gerea conceptului de histograma, pe care l-am deslusit eventual, pana la afla cum sa 
+gestionezi fisiere in octave pentru ca aici prezenta n-a observat existenta functiei getImg
+de prima oara (o specificare in enunt ar fi ajutat); de asemenea, aici am descoperit 
+importanta vectorizarilor pe care am voi nevoita sa o fac si sa rescriu integral aproape 
+toate functiileintrucat rularea totala a programului imi depasea cu mult 20 de minute 
+(pentru ca atat am avut rabdare sa-l lasa maximsa ruleze) si am fost nevoita sa ma 
+obisnuiesc cu vectorizarile, lucru din care am invatat cel mai mult in aceasta tema si 
+pe care l-am folosit si in taskul 4; probabil m-as fi multumit cu o abordare ineficienta 
+daca nu eram constransa de timeout.
+
+PARTEA 4
+
+	Al patrulea task a constat in utilizarea unei metode iterative noi (Gradient Descent) 
+pentru rezolvarea unui sistem liniar Ax=b si continuarea conceptului de invatare automata.
+	Am preluat o parte din functiile de la taskul 3 (mai multe detalii in comentariile din cod).
+	Au trebuit implementate urmatoarele functii:
+
+		•function [w] = learn(X, y, lr, epochs)
+			-functia intoarce vectorul de parametri w cu ajutorul algoritmului Gradient Descent;
+
+		•function [percentage] = evaluate(pathtotestset, w, histogram, countbins)
+			-functia returneaza procentul de poze corect identificate dintr-un nou set
+			de date folosind vectorul de componente w creat anterior.
+
+Feedback: a fost o problema clar mai usoara decat partea a 3-a, reutilzand o mare parte
+din functii, a carei dificultate a constat in intelegerea efectiva a algoritmului
+Gradient Descent.
+
+SORRY FOR LONG README... a fost cea mai stufoasa tema de pana acum si cea mai interesanta. 
+	
